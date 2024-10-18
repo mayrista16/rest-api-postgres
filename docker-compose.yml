@@ -1,0 +1,16 @@
+services:
+  database:
+    container_name: database
+    image: postgres:12.8
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=go_gin_gonic
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data 
+  
+volumes:
+  db:
