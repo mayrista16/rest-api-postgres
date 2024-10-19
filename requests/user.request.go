@@ -8,3 +8,9 @@ type UserRequest struct {
 	Address  string    `json:"address" binding:"required"`
 	BornDate time.Time `json:"date" binding:"required"`
 }
+
+type UserResponse struct {
+	ID      *string `json:"id"`
+	Name    *string `json:"name"`
+	Address *string `json:"address"`
+}
