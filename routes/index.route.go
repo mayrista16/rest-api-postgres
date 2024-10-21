@@ -2,7 +2,8 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mayrista16/rest-api-postgres/controllers/book_controller"
+	"github.com/mayrista16/rest-api-postgres/controllers/user_controller"
+	"github.com/mayrista16/rest-api-postgres/middleware"
 )
 
 func InitRoute(app *gin.Engine) {
@@ -11,5 +12,7 @@ func InitRoute(app *gin.Engine) {
 	UserRoute(route)
 
 	//Route Book
-	route.GET("/", book_controller.GetAllBook)
+	route.POST("/signup", user_controller.Signup)
+	route.POST("/login", user_controller.Login)
+	route.GET("/validate", middleware.RequireAuth, user_controller.Validate)
 }
