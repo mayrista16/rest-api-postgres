@@ -1,6 +1,7 @@
 package user_controller
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/mayrista16/rest-api-postgres/models"
 	"github.com/mayrista16/rest-api-postgres/requests"
 	"github.com/mayrista16/rest-api-postgres/responses"
+	"github.com/mayrista16/rest-api-postgres/services"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -158,12 +160,24 @@ func Login(c *gin.Context) {
 
 		return
 	}
+
+	refreshClaims := jwt.RegisteredClaims{
+		IssuedAt:  jwt.NewNumericDate(time.Now()),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 48)),
+	}
+
+	signedRefreshToken, err := services.NewRefreshToken(refreshClaims)
+	if err != nil {
+		log.Fatal("error creating refresh token")
+	}
+
 	// Send back
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600*24, "", "", false, true)
 
 	c.JSON(http.StatusOK, gin.H{
-		"token": tokenString,
+		"access_token":  tokenString,
+		"refresh_token": signedRefreshToken,
 	})
 }
 
